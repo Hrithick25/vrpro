@@ -68,7 +68,7 @@
     <div class="content-fit">
       <h2 class="title">About Us</h2>
       <p>
-        At Viruzverse, we redefine architectural visualization using cutting-edge 3D AR/VR technology. Our goal is to help builders, architects, and homeowners experience their projects in real-time, immersive detail before construction begins.
+        At Viruzverse, we redefine architectural visualization using cutting-edge 3D AR/VR technology. Our goal is to help builders, architects, and homeowners experience their projects in real time, immersive detail before construction begins.
       </p>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vehicula nibh at arcu suscipit, vel sollicitudin nulla viverra. Donec dignissim dui elit, in facilisis nisl ultrices a.
@@ -220,40 +220,28 @@
     // Form submission handling
     document.getElementById('registrationForm').addEventListener('submit', function(event) {
       event.preventDefault();
-      // Here you would typically send the form data to a server
       alert('Thank you for registering! We will contact you soon.');
       closeDemoForm();
     });
 
-    // Variables for testimonial slider
+    // Testimonial slider functions
     let currentSlideIndex = 0;
-
-    // Function to move slides
     function moveSlide(n) {
       showSlide(currentSlideIndex += n);
     }
-
-    // Function to set current slide
     function currentSlide(n) {
       showSlide(currentSlideIndex = n);
     }
-
-    // Function to display the appropriate slide - updated for mobile
     function showSlide(n) {
-      // Get all slides and dots
       const slides = document.querySelectorAll('.testimonial-slide');
       const dots = document.querySelectorAll('.dot');
       
-      // Handle wrapping of slide index
       if (n > dots.length - 1) currentSlideIndex = 0;
       if (n < 0) currentSlideIndex = dots.length - 1;
       
-      // For larger screens, use transform
       if (window.innerWidth > 768) {
         document.querySelector('.testimonial-slider').style.transform = `translateX(-${currentSlideIndex * 33.333}%)`;
-      } 
-      // For mobile, toggle active class
-      else {
+      } else {
         slides.forEach((slide, index) => {
           slide.classList.remove('active');
           if (index === currentSlideIndex) {
@@ -261,8 +249,6 @@
           }
         });
       }
-      
-      // Update active dot
       dots.forEach((dot, index) => {
         dot.classList.remove('active');
         if (index === currentSlideIndex) {
@@ -270,23 +256,14 @@
         }
       });
     }
-
-    // Auto-advance slides every 5 seconds
     let slideInterval = setInterval(() => moveSlide(1), 5000);
-    
-    // Pause auto-advance on hover
     document.querySelector('.testimonial-container').addEventListener('mouseenter', () => {
       clearInterval(slideInterval);
     });
-    
-    // Resume auto-advance when mouse leaves
     document.querySelector('.testimonial-container').addEventListener('mouseleave', () => {
       slideInterval = setInterval(() => moveSlide(1), 5000);
     });
-
-    // Initialize testimonials when DOM is loaded
     document.addEventListener("DOMContentLoaded", function() {
-      // Initialize testimonials
       showSlide(currentSlideIndex);
     });
   </script>
