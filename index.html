@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Viruzverse</title>
+  <title>VR-verse</title>
+  <link rel="icon" type="image/x-icon" href="WhatsApp_Image_2025-04-05_at_15.20.16_10489953-removebg.png">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -91,10 +92,10 @@
             <div class="testimonial-card">
               <div class="user-profile">
                 <div class="profile-image">
-                  <img src="/api/placeholder/60/60" alt="Aditya" />
+                  <img src="user.png" alt="Aditya" />
                 </div>
                 <div class="profile-info">
-                  <h4>Aditya Kumar</h4>
+                  <h4>Aditya</h4>
                   <p class="profile-position">Architect & Designer</p>
                 </div>
               </div>
@@ -113,10 +114,10 @@
             <div class="testimonial-card">
               <div class="user-profile">
                 <div class="profile-image">
-                  <img src="/api/placeholder/60/60" alt="Gowtham" />
+                  <img src="user.png" alt="Gowtham" />
                 </div>
                 <div class="profile-info">
-                  <h4>Gowtham Raj</h4>
+                  <h4>Gowtham</h4>
                   <p class="profile-position">Property Developer</p>
                 </div>
               </div>
@@ -135,10 +136,10 @@
             <div class="testimonial-card">
               <div class="user-profile">
                 <div class="profile-image">
-                  <img src="/api/placeholder/60/60" alt="Praveen" />
+                  <img src="user.png" alt="Praveen" />
                 </div>
                 <div class="profile-info">
-                  <h4>Praveen Sanjay</h4>
+                  <h4>Mohan</h4>
                   <p class="profile-position">Interior Specialist</p>
                 </div>
               </div>
@@ -237,18 +238,29 @@
       showSlide(currentSlideIndex = n);
     }
 
-    // Function to display the appropriate slide
+    // Function to display the appropriate slide - updated for mobile
     function showSlide(n) {
       // Get all slides and dots
-      const slides = document.querySelector('.testimonial-slider');
+      const slides = document.querySelectorAll('.testimonial-slide');
       const dots = document.querySelectorAll('.dot');
       
       // Handle wrapping of slide index
       if (n > dots.length - 1) currentSlideIndex = 0;
       if (n < 0) currentSlideIndex = dots.length - 1;
       
-      // Move the slider to show the current slide
-      slides.style.transform = `translateX(-${currentSlideIndex * 33.333}%)`;
+      // For larger screens, use transform
+      if (window.innerWidth > 768) {
+        document.querySelector('.testimonial-slider').style.transform = `translateX(-${currentSlideIndex * 33.333}%)`;
+      } 
+      // For mobile, toggle active class
+      else {
+        slides.forEach((slide, index) => {
+          slide.classList.remove('active');
+          if (index === currentSlideIndex) {
+            slide.classList.add('active');
+          }
+        });
+      }
       
       // Update active dot
       dots.forEach((dot, index) => {

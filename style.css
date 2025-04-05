@@ -1,25 +1,19 @@
 @import url('https://fonts.cdnfonts.com/css/devil-breeze');
 @import url('https://fonts.cdnfonts.com/css/poppins'); 
 
+/* Base styles */
 html, body { 
   margin: 0; 
   padding: 0;
   font-family: 'Poppins', sans-serif; 
   background: linear-gradient(to bottom right, #0a0a0a, #0e102f); 
   color: #a7a9ad;
-  scroll-behavior: smooth; /* Add smooth scrolling for better UX */
+  scroll-behavior: smooth;
 }
 
 /* Utility resets */
-* { 
-  box-sizing: border-box;
-}  
-
-ul { 
-  margin: 0; 
-  padding: 0; 
-  list-style: none;
-}
+* { box-sizing: border-box; }  
+ul { margin: 0; padding: 0; list-style: none; }
 
 /* 3D MODEL CONTAINER */
 #vr-model-container {
@@ -28,8 +22,8 @@ ul {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1; /* Below content but above background */
-  pointer-events: none; /* Allow interaction with elements behind it */
+  z-index: 1;
+  pointer-events: none;
 }
 
 /* HEADER (NAVBAR) */
@@ -59,7 +53,7 @@ header .content-fit {
   font-size: 1.5rem; 
   font-weight: 600; 
   color: #fff;
-  text-shadow: 0 0 10px rgba(149, 0, 255, 0.5); /* Add glow effect to match VR theme */
+  text-shadow: 0 0 10px rgba(149, 0, 255, 0.5);
 }
 
 /* NAV MENU */
@@ -101,13 +95,13 @@ nav ul li a:hover {
 /* SECTIONS */
 .section { 
   width: 100%; 
-  min-height: 100vh; /* Ensure each section takes at least full viewport height */
+  min-height: 100vh;
   padding: 5em 0;
   display: flex; 
   justify-content: center; 
   align-items: center;
   position: relative;
-  z-index: 2; /* Above the 3D model */
+  z-index: 2;
 }
 
 /* Add depth effect to sections */
@@ -329,39 +323,6 @@ button:hover {
   box-shadow: 0 0 8px rgba(149, 0, 255, 0.5);
 }
 
-/* MEDIA QUERIES */
-@media (max-width: 768px) { 
-  header .content-fit { 
-    flex-direction: column; 
-  } 
-  
-  nav ul { 
-    flex-direction: column; 
-    gap: 1em; 
-    margin-top: 1em; 
-  } 
-  
-  .title { 
-    font-size: 2rem; 
-  }
-  
-  #demoForm {
-    width: 90%;
-  }
-}
-
-/* Add animation for page elements */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* TESTIMONIALS SLIDER */
 .testimonial-container {
   position: relative;
@@ -572,47 +533,71 @@ button:hover {
   box-shadow: 0 0 10px rgba(149, 0, 255, 0.5);
 }
 
-/* Responsive Design for All Screen Sizes */
-@media (min-width: 1200px) {
-  .testimonial-container {
-    max-width: 1000px;
+/* IMPROVED MEDIA QUERIES */
+@media (max-width: 768px) {
+  /* Improved header/navbar for mobile */
+  header .content-fit {
+    flex-direction: column;
+    padding: 0.5em;
   }
   
-  .testimonial-card {
-    padding: 2.5rem;
+  .logo {
+    margin-bottom: 0.5em;
   }
-}
-
-@media (max-width: 992px) {
-  .testimonial-container {
-    max-width: 700px;
+  
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5em;
+    margin-top: 0.5em;
   }
-}
-
-@media (max-width: 768px) {
+  
+  nav ul li a {
+    padding: 0.4em 0.5em;
+    font-size: 0.9rem;
+  }
+  
+  /* Adjusted section padding for mobile */
+  .section {
+    padding: 4em 0 2em;
+  }
+  
+  /* Adjusted content padding for mobile */
+  .content-fit {
+    padding: 1.5em;
+  }
+  
+  /* Smaller title text on mobile */
+  .title {
+    font-size: 2rem;
+    margin-bottom: 0.8em;
+  }
+  
+  /* Improved testimonial layout for mobile */
   .testimonial-container {
-    max-width: 90%;
-    padding: 10px 0;
+    padding: 0;
   }
   
   .testimonial-slider {
     width: 100%;
-    flex-direction: column;
   }
   
+  /* Fixed testimonial slide issue - make each slide take full width on mobile */
   .testimonial-slide {
     min-width: 100%;
-    padding: 10px 5px;
-    margin-bottom: 1.5rem;
+    padding: 5px;
   }
   
+  /* Adjust testimonial card for better mobile spacing */
   .testimonial-card {
-    padding: 1.5rem;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
   }
   
+  /* More compact user profile for mobile */
   .user-profile {
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.8rem;
   }
   
   .profile-image {
@@ -620,43 +605,139 @@ button:hover {
     height: 50px;
   }
   
-  .profile-info h4 {
-    font-size: 1rem;
-  }
-  
-  .testimonial-text {
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 0.95rem;
-  }
-  
-  .testimonial-controls {
-    margin-top: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .testimonial-card {
-    padding: 1.2rem;
-  }
-  
-  .profile-image {
-    width: 45px;
-    height: 45px;
-  }
-  
+  /* Smaller stars on mobile */
   .testimonial-rating {
     font-size: 1rem;
+    margin-bottom: 0.8rem;
   }
   
+  /* More compact testimonial text on mobile */
   .testimonial-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
     padding-left: 0.7rem;
-    font-family: 'Times New Roman', Times, serif;
-    border-left: 2px solid rgba(149, 0, 255, 0.5);
+  }
+  
+  /* More compact testimonial controls */
+  .testimonial-controls {
+    margin-top: 1.2rem;
+    gap: 1rem;
   }
   
   .prev-btn, .next-btn {
     width: 36px;
     height: 36px;
     font-size: 1rem;
+  }
+  
+  /* Fix for the form on mobile */
+  #demoForm {
+    padding: 20px;
+    width: 85%;
+  }
+}
+
+/* Additional improvements for very small screens */
+@media (max-width: 480px) {
+  /* Even more compact navbar */
+  nav ul li a {
+    padding: 0.3em 0.4em;
+    font-size: 0.8rem;
+  }
+  
+  /* Further reduced content padding */
+  .content-fit {
+    padding: 1.2em;
+  }
+  
+  /* Even smaller title */
+  .title {
+    font-size: 1.8rem;
+  }
+  
+  /* Further optimized testimonial card */
+  .testimonial-card {
+    padding: 1rem;
+  }
+  
+  /* Smaller profile image */
+  .profile-image {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .profile-info h4 {
+    font-size: 0.9rem;
+  }
+  
+  .profile-position {
+    font-size: 0.75rem;
+  }
+  
+  /* More compact testimonial text */
+  .testimonial-text {
+    font-size: 0.85rem;
+    padding-left: 0.6rem;
+    border-left: 2px solid rgba(149, 0, 255, 0.5);
+  }
+  
+  /* Smaller testimonial buttons */
+  .prev-btn, .next-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+  
+  /* Smaller dots */
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* Fix for testimonial slider on mobile */
+@media (max-width: 768px) {
+  /* Override slider functionality for mobile */
+  .testimonial-slider {
+    display: block;
+    transform: none !important;
+  }
+  
+  /* Display slides as a stack on mobile */
+  .testimonial-slide {
+    display: none;
+    width: 100%;
+    padding: 10px 5px;
+  }
+  
+  /* Show only active slide */
+  .testimonial-slide.active {
+    display: block;
+  }
+  
+  /* Script will need to toggle active class on slides instead of using transform */
+}
+
+/* Fix section spacing on mobile */
+@media (max-width: 768px) {
+  #home {
+    padding-top: 70px;
+  }
+  
+  .section {
+    min-height: auto;
+    padding: 70px 0 40px;
+  }
+}
+
+/* Add animation - maintained from original but scope limited */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
