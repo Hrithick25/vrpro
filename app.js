@@ -93,16 +93,20 @@ loader.load(
         // Apply materials and optimization
         vrHeadset.traverse((node) => {
             if (node.isMesh) {
-                node.castShadow = true;
-                node.receiveShadow = true;
-                
-                // Improve material quality if needed
-                if (node.material) {
-                    node.material.envMapIntensity = 1.5;
-                    node.material.needsUpdate = true;
+              node.castShadow = true;
+              node.receiveShadow = true;
+              
+              // Improve material quality if needed
+              if (node.material) {
+                node.material.envMapIntensity = 1.5;
+                // <-- Add the anisotropy code here:
+                if (node.material.map) {
+                  node.material.map.anisotropy = renderer.capabilities.getMaxAnisotropy();
                 }
+                node.material.needsUpdate = true;
+              }
             }
-        });
+          });
         
         // Initial scale and position
         vrHeadset.scale.set(0.5, 0.5, 0.5); // Reduced scale

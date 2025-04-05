@@ -1,29 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VR-verse</title>
-  <link rel="icon" type="image/x-icon" href="WhatsApp_Image_2025-04-05_at_15.20.16_10489953-removebg.png">
-  <link rel="stylesheet" href="style.css" />
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>VR-verse</title>
+    <link rel="icon" type="image/x-icon" href="WhatsApp_Image_2025-04-05_at_15.20.16_10489953-removebg.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="style.css" />
+  </head>
 <body>
   <!-- HEADER / NAVBAR -->
-  <header>
-    <div class="content-fit">
-      <div class="logo">Viruzverse</div>
-      <nav>
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#designs">Designs</a></li>
-          <li><a href="#testimonials">Testimonials</a></li>
-          <li><a href="#contact">Contact</a></li>
-          <li><a href="#register" onclick="openDemoForm()">Register</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+<!-- HEADER / NAVBAR -->
+<header>
+  <div class="content-fit">
+    <div class="logo">Viruzverse</div>
+    <!-- Mobile toggle button (visible only on mobile) -->
+    <button class="menu-toggle" onclick="toggleNav()">☰</button>
+    <!-- Mobile Navigation (hidden on desktop) -->
+    <nav class="mobile-nav" id="mobile-nav">
+      <ul>
+        <li><a href="#home" onclick="toggleNav()">Home</a></li>
+        <li><a href="#about" onclick="toggleNav()">About Us</a></li>
+        <li><a href="#designs" onclick="toggleNav()">Designs</a></li>
+        <li><a href="#testimonials" onclick="toggleNav()">Testimonials</a></li>
+        <li><a href="#contact" onclick="toggleNav()">Contact</a></li>
+        <li><a href="#register" onclick="openDemoForm(); toggleNav()">Register</a></li>
+      </ul>
+    </nav>
+    <!-- Existing desktop nav remains unchanged -->
+    <nav class="desktop-nav">
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#designs">Designs</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#register" onclick="openDemoForm()">Register</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
 
   <!-- 3D MODEL CONTAINER -->
   <div id="vr-model-container"></div>
@@ -32,8 +48,10 @@
   <div class="section" id="home" style="background-image: url('img/3d-background.jpg'); background-size: cover; background-position: center;">
     <div class="content-fit">
       <h1 class="title">Visualize before you build!</h1>
-      <p>Step into a new dimension of architectural visualization—see, feel, and experience your dream space before construction begins.</p>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque accusantium pariatur facilis ipsa nemo ducimus itaque deleniti possimus eaque eos soluta deserunt minima, sapiente, laudantium quidem beatae assumenda quas sunt.</p>
+      <p class="quote">Step into a new dimension of architectural visualization—see, feel, and experience your dream space before construction begins.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque accusantium pariatur facilis ipsa nemo ducimus itaque deleniti possimus eaque eos soluta deserunt minima, sapiente, laudantium quidem beatae assumenda quas sunt. Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque accusantium pariatur facilis ipsa nemo ducimus itaque deleniti possimus eaque eos soluta deserunt minima, sapiente, laudantium quidem beatae assumenda quas sunt. 
+        
+    </p>
       <center>
         <button onclick="openDemoForm()" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
           Register for Demo
@@ -197,8 +215,43 @@
       </form>
     </div>
   </div>
-
+  <!--footer-->
+  <footer class="advanced-footer">
+    <div class="footer-container">
+      <div class="footer-column footer-logo-col">
+        <h3>Viruzverse</h3>
+        <p>Revolutionizing visualization with cutting‑edge 3D AR/VR technology.</p>
+      </div>
+      <div class="footer-column footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#designs">Designs</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-column footer-social-col">
+        <h4>Connect</h4>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/viruzverse.tech/?hl=en" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.linkedin.com/company/viruzverse-solutions/posts/?feedView=all" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 Viruzverse. All Rights Reserved.
+    </div>
+  </footer>
+  
   <!-- SCRIPTS -->
+  <script>
+    function toggleNav() {
+      const mobileNav = document.getElementById('mobile-nav');
+      mobileNav.classList.toggle('active');
+    }
+  </script>
   <script>
     // Demo form functions
     function openDemoForm() {
@@ -216,14 +269,14 @@
         closeDemoForm();
       }
     }
-
+    
     // Form submission handling
     document.getElementById('registrationForm').addEventListener('submit', function(event) {
       event.preventDefault();
       alert('Thank you for registering! We will contact you soon.');
       closeDemoForm();
     });
-
+    
     // Testimonial slider functions
     let currentSlideIndex = 0;
     function moveSlide(n) {
@@ -242,13 +295,9 @@
       if (window.innerWidth > 768) {
         document.querySelector('.testimonial-slider').style.transform = `translateX(-${currentSlideIndex * 33.333}%)`;
       } else {
-        slides.forEach((slide, index) => {
-          slide.classList.remove('active');
-          if (index === currentSlideIndex) {
-            slide.classList.add('active');
-          }
-        });
+        document.querySelector('.testimonial-slider').style.transform = `translateX(-${currentSlideIndex * 100}%)`;
       }
+      
       dots.forEach((dot, index) => {
         dot.classList.remove('active');
         if (index === currentSlideIndex) {
