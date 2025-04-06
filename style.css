@@ -593,6 +593,24 @@ button:hover {
     padding: 0.8em 0.5em;
   }
 }
+
+@media (max-width: 768px) {
+  .advanced-footer {
+    background: url("footer-bg.png") no-repeat center center, linear-gradient(135deg, #1a1a1a, #0e102f);
+    background-size: cover;
+  }
+}
+  .footer-container {
+    gap: 1em; /* Reduced gap between footer columns */
+    padding: 0 1em;
+  }
+  
+  .footer-bottom {
+    margin-top: 0.3em;
+    padding-top: 0.3em;
+    font-size: 0.8rem;
+  }
+
 @media (max-width: 768px) {
   .testimonial-container {
     text-align: center;
