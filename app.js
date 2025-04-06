@@ -1,5 +1,3 @@
-// Create a new script file named "vr-model.js" and place this code in it
-
 import * as THREE from 'https://cdn.skypack.dev/three@0.129.0/build/three.module.js';
 import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js';
@@ -16,7 +14,7 @@ const camera = new THREE.PerspectiveCamera(
     0.1, 
     1000
 );
-camera.position.set(0, 0, 5);
+camera.position.set(0, 0, 4); // Moved closer to better see the smaller model
 
 // Initialize container and renderer
 const container = document.getElementById('vr-model-container');
@@ -25,10 +23,11 @@ const renderer = new THREE.WebGLRenderer({
     alpha: true 
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio,2);
 renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
-renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 container.appendChild(renderer.domElement);
 
 // Add lights for premium appearance
@@ -49,40 +48,77 @@ scene.add(rimLight);
 const loader = new GLTFLoader();
 let vrHeadset;
 let mixer;
+let controls;
+let isUserInteracting = false;
+let isHovering = false;
+let isAnimating = false;
+let pulseAnimation;
+let hoverAnimation;
+let floatAnimation;
 
 // Define model positions for different sections
 const sectionPositions = [
     {
         id: 'home',
-        position: { x: 0, y: -0.5, z: 0 },
+        position: { x: 0, y: 0, z: 0 },
         rotation: { x: 0, y: 1.5, z: 0 },
-        scale: 1.2
+        scale: 0.72
     },
     {
         id: 'designs',
-        position: { x: 1, y: -0.5, z: -1 },
+        position: { x: 0, y: 0, z: 0 },
         rotation: { x: 0.3, y: -0.8, z: 0.1 },
-        scale: 1
+        scale: 0.6
     },
     {
         id: 'about',
-        position: { x: -1, y: -0.5, z: -1 },
+        position: { x: 0, y: 0, z: 0 },
         rotation: { x: 0.2, y: 0.8, z: 0 },
-        scale: 1
+        scale: 0.6
     },
     {
         id: 'contact',
-        position: { x: 0, y: -0.5, z: -1 },
+        position: { x: 0, y: 0, z: 0 },
         rotation: { x: 0.5, y: 0, z: 0 },
-        scale: 0.8
+        scale: 0.5
     },
     {
         id: 'testimonials',
-        position: { x: 0.5, y: -0.3, z: -0.5 },
+        position: { x: 0, y: 0, z: 0 },
         rotation: { x: -0.2, y: 1, z: 0.1 },
-        scale: 1.1
+        scale: 0.66
     }
 ];
+
+// Setup user interaction controls
+function setupControls() {
+    // Add orbit controls for mouse drag rotation
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.enableZoom = false; // Disable zoom to prevent user from getting lost
+    controls.enablePan = false;  // Disable panning
+    controls.rotateSpeed = 0.5;  // Make rotation more gentle
+    controls.maxPolarAngle = Math.PI * 0.65; // Limit vertical rotation
+    controls.minPolarAngle = Math.PI * 0.35;
+    
+    // Enable/disable controls based on user interaction
+    controls.addEventListener('start', function() {
+        isUserInteracting = true;
+        pauseAnimations();
+    });
+    
+    controls.addEventListener('end', function() {
+        isUserInteracting = false;
+        if (!isHovering) {
+            resumeAnimations();
+        }
+    });
+}
+
+// Raycaster for mouse hover interaction
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
 
 // Try to load the model
 loader.load(
@@ -90,26 +126,21 @@ loader.load(
     function(gltf) {
         vrHeadset = gltf.scene;
         
-        // Apply materials and optimization
         vrHeadset.traverse((node) => {
             if (node.isMesh) {
-              node.castShadow = true;
-              node.receiveShadow = true;
-              
-              // Improve material quality if needed
-              if (node.material) {
-                node.material.envMapIntensity = 1.5;
-                // <-- Add the anisotropy code here:
-                if (node.material.map) {
-                  node.material.map.anisotropy = renderer.capabilities.getMaxAnisotropy();
-                }
+              if (node.material && node.material.map) {
+                node.castShadow = true;
+                node.receiveShadow = true;
+                node.material.map.minFilter = THREE.LinearMipMapLinearFilter;
+                node.material.map.magFilter = THREE.LinearFilter;
+                node.material.map.anisotropy = renderer.capabilities.getMaxAnisotropy();
                 node.material.needsUpdate = true;
               }
             }
-          });
+        });
         
         // Initial scale and position
-        vrHeadset.scale.set(0.5, 0.5, 0.5); // Reduced scale
+        vrHeadset.scale.set(0.3, 0.3, 0.3);
         scene.add(vrHeadset);
         
         if (gltf.animations.length > 0) {
@@ -117,9 +148,12 @@ loader.load(
             const action = mixer.clipAction(gltf.animations[0]);
             action.play();
         } else {
-            // Add a subtle rotation animation if no animations exist
-            animateModel();
+            // Add animations
+            setupAnimations();
         }
+        
+        // Setup user interactions
+        setupControls();
         
         // Set initial position based on visible section
         updateModelPosition();
@@ -133,6 +167,242 @@ loader.load(
         createFallbackModel();
     }
 );
+
+// Enhanced animations
+function setupAnimations() {
+    if (!vrHeadset) return;
+
+    // Float animation (gentle up and down)
+    floatAnimation = gsap.to(vrHeadset.position, {
+        y: vrHeadset.position.y + 0.08,
+        duration: 2,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut",
+        paused: false
+    });
+    
+    // Pulse animation (subtle scale pulsing)
+    const originalScale = { value: vrHeadset.scale.x };
+    pulseAnimation = gsap.to(originalScale, {
+        value: originalScale.value * 1.05,
+        duration: 1.5,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut",
+        paused: true,
+        onUpdate: function() {
+            if (vrHeadset) {
+                vrHeadset.scale.set(
+                    originalScale.value,
+                    originalScale.value,
+                    originalScale.value
+                );
+            }
+        }
+    });
+    
+    // The hover glow animation will be triggered on mouse hover
+    // Add a custom property for glow intensity
+    vrHeadset.userData.glowIntensity = 0;
+}
+
+// Pause all automatic animations
+function pauseAnimations() {
+    if (floatAnimation) floatAnimation.pause();
+    if (pulseAnimation) pulseAnimation.pause();
+    if (hoverAnimation) hoverAnimation.pause();
+    isAnimating = false;
+}
+
+// Resume automatic animations
+function resumeAnimations() {
+    if (floatAnimation) floatAnimation.play();
+    isAnimating = true;
+}
+
+// Handle mouse hover effects
+function onMouseMove(event) {
+    // Calculate mouse position in normalized device coordinates
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    
+    // Check for intersections
+    if (vrHeadset) {
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(vrHeadset, true);
+        
+        if (intersects.length > 0) {
+            if (!isHovering) {
+                isHovering = true;
+                
+                // Pause regular animations
+                pauseAnimations();
+                
+                // Start hover animation - scaled up slightly
+                gsap.to(vrHeadset.scale, {
+                    x: vrHeadset.scale.x * 1.1,
+                    y: vrHeadset.scale.y * 1.1,
+                    z: vrHeadset.scale.z * 1.1,
+                    duration: 0.5,
+                    ease: "back.out(1.5)"
+                });
+                
+                // Make the rim light stronger for glow effect
+                gsap.to(rimLight, {
+                    intensity: 1.5,
+                    duration: 0.3
+                });
+                
+                // Change cursor
+                document.body.style.cursor = 'pointer';
+                
+                // Add hint tooltip for user
+                // showTooltip("Click to interact");
+            }
+        } else {
+            if (isHovering) {
+                isHovering = false;
+                
+                // Return to original scale with elastic effect
+                gsap.to(vrHeadset.scale, {
+                    x: vrHeadset.scale.x / 1.1,
+                    y: vrHeadset.scale.y / 1.1,
+                    z: vrHeadset.scale.z / 1.1,
+                    duration: 0.5,
+                    ease: "elastic.out(1, 0.3)"
+                });
+                
+                // Reset rim light
+                gsap.to(rimLight, {
+                    intensity: 1,
+                    duration: 0.3
+                });
+                
+                // Reset cursor
+                document.body.style.cursor = 'auto';
+                
+                // Hide tooltip
+                // hideTooltip();
+                
+                // Resume animations if not user interacting
+                if (!isUserInteracting) {
+                    resumeAnimations();
+                }
+            }
+        }
+    }
+}
+
+// Handle mouse click on model
+function onMouseClick(event) {
+    if (vrHeadset && isHovering) {
+        // Trigger a special animation on click
+        
+        // First stop any ongoing animations
+        pauseAnimations();
+        
+        // Get current section
+        const currentSectionId = getCurrentSectionId();
+        
+        // Do a 360 spin based on the current section
+        const currentPosition = sectionPositions.find(pos => pos.id === currentSectionId);
+        
+        // Create a spectacular spin animation
+        const spinDuration = 1.2;
+        
+        // First part - spin up and zoom
+        gsap.timeline()
+            .to(vrHeadset.rotation, {
+                y: vrHeadset.rotation.y + Math.PI * 2,
+                duration: spinDuration,
+                ease: "power2.inOut"
+            })
+            .to(vrHeadset.position, {
+                y: vrHeadset.position.y + 0.3,
+                duration: spinDuration / 2,
+                yoyo: true,
+                repeat: 1,
+                ease: "power1.out"
+            }, 0) // Start at the same time
+            .to(spotLight, {
+                intensity: 1.5,
+                duration: spinDuration / 4,
+                yoyo: true,
+                repeat: 3,
+                ease: "sine.inOut"
+            }, 0) // Start at the same time
+            .call(function() {
+                // Resume regular animations when done
+                if (!isUserInteracting) {
+                    resumeAnimations();
+                }
+            });
+    }
+}
+
+// Show tooltip
+// function showTooltip(text) {
+//     let tooltip = document.getElementById('vr-model-tooltip');
+//     if (!tooltip) {
+//         tooltip = document.createElement('div');
+//         tooltip.id = 'vr-model-tooltip';
+//         tooltip.style.position = 'fixed';
+//         tooltip.style.backgroundColor = 'rgba(0,0,0,0.7)';
+//         tooltip.style.color = 'white';
+//         tooltip.style.padding = '8px 12px';
+//         tooltip.style.borderRadius = '4px';
+//         tooltip.style.fontSize = '14px';
+//         tooltip.style.pointerEvents = 'none';
+//         tooltip.style.zIndex = '1000';
+//         tooltip.style.transform = 'translate(-50%, -100%)';
+//         tooltip.style.marginTop = '-10px';
+//         document.body.appendChild(tooltip);
+//     }
+    
+//     tooltip.innerText = text;
+//     tooltip.style.display = 'block';
+    
+//     // Position tooltip to follow mouse
+//     document.addEventListener('mousemove', positionTooltip);
+// }
+
+// Position tooltip to follow cursor
+// function positionTooltip(e) {
+//     const tooltip = document.getElementById('vr-model-tooltip');
+//     if (tooltip) {
+//         tooltip.style.left = e.clientX + 'px';
+//         tooltip.style.top = e.clientY - 10 + 'px';
+//     }
+// }
+
+// // Hide tooltip
+// function hideTooltip() {
+//     const tooltip = document.getElementById('vr-model-tooltip');
+//     if (tooltip) {
+//         tooltip.style.display = 'none';
+//         document.removeEventListener('mousemove', positionTooltip);
+//     }
+// }
+
+// Get current visible section ID
+function getCurrentSectionId() {
+    const sections = document.querySelectorAll('.section');
+    let currentSection = null;
+    let maxVisibleHeight = 0;
+    
+    sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+        
+        if (visibleHeight > maxVisibleHeight) {
+            maxVisibleHeight = visibleHeight;
+            currentSection = section.id;
+        }
+    });
+    
+    return currentSection || 'home'; // Default to home if nothing found
+}
 
 // Fallback model creation function
 function createFallbackModel() {
@@ -174,87 +444,50 @@ function createFallbackModel() {
     headsetGroup.add(strap);
     
     // Adjust scale
-    headsetGroup.scale.set(0.5, 0.5, 0.5); // Reduced scale for fallback model
+    headsetGroup.scale.set(0.3, 0.3, 0.3);
 
     // Set as our model
     vrHeadset = headsetGroup;
     scene.add(vrHeadset);
     
-    // Animate the fallback model
-    animateModel();
+    // Setup animations & controls
+    setupAnimations();
+    setupControls();
     updateModelPosition();
 }
 
-// Subtle continuous animation for the VR headset
-function animateModel() {
-    if (!vrHeadset) return;
-
-    // Smooth and subtle rotation animation
-    gsap.to(vrHeadset.rotation, {
-        y: vrHeadset.rotation.y + Math.PI, // Half rotation
-        duration: 15, // Slow rotation over 15 seconds
-        repeat: -1, // Infinite loop
-        ease: "power1.inOut"
-    });
-
-    // Gentle floating animation
-    gsap.to(vrHeadset.position, {
-        y: vrHeadset.position.y + 0.05, // Float up slightly
-        duration: 3, // Slower floating animation
-        yoyo: true, // Reverse the animation
-        repeat: -1, // Infinite loop
-        ease: "sine.inOut"
-    });
-}
 // Update model position based on visible section
 function updateModelPosition() {
     if (!vrHeadset) return;
     
-    const sections = document.querySelectorAll('.section');
-    let currentSection = null;
+    const currentSectionId = getCurrentSectionId();
+    const targetPosition = sectionPositions.find(pos => pos.id === currentSectionId);
     
-    // Find the most visible section
-    sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+    if (targetPosition) {
+        // Smooth transition to new position
+        gsap.to(vrHeadset.position, {
+            x: targetPosition.position.x,
+            y: targetPosition.position.y,
+            z: targetPosition.position.z,
+            duration: 1.5,
+            ease: "power2.inOut"
+        });
         
-        if (visibleHeight > 0 && (!currentSection || visibleHeight > currentSection.visibleHeight)) {
-            currentSection = {
-                id: section.id,
-                visibleHeight: visibleHeight
-            };
-        }
-    });
-    
-    if (currentSection) {
-        const targetPosition = sectionPositions.find(pos => pos.id === currentSection.id);
+        gsap.to(vrHeadset.rotation, {
+            x: targetPosition.rotation.x,
+            y: targetPosition.rotation.y,
+            z: targetPosition.rotation.z,
+            duration: 1.5,
+            ease: "power2.inOut"
+        });
         
-        if (targetPosition) {
-            // Smooth transition to new position
-            gsap.to(vrHeadset.position, {
-                x: targetPosition.position.x,
-                y: targetPosition.position.y,
-                z: targetPosition.position.z,
-                duration: 2, // Slightly slower transition
-                ease: "power2.inOut"
-            });
-            
-            gsap.to(vrHeadset.rotation, {
-                x: targetPosition.rotation.x,
-                y: targetPosition.rotation.y,
-                z: targetPosition.rotation.z,
-                duration: 2,
-                ease: "power2.inOut"
-            });
-            
-            gsap.to(vrHeadset.scale, {
-                x: targetPosition.scale,
-                y: targetPosition.scale,
-                z: targetPosition.scale,
-                duration: 2,
-                ease: "power2.inOut"
-            });
-        }
+        gsap.to(vrHeadset.scale, {
+            x: targetPosition.scale,
+            y: targetPosition.scale,
+            z: targetPosition.scale,
+            duration: 1.5,
+            ease: "power2.inOut"
+        });
     }
 }
 
@@ -264,6 +497,10 @@ function animate() {
     
     if (mixer) {
         mixer.update(0.016); // ~60fps
+    }
+    
+    if (controls) {
+        controls.update(); // Update orbit controls
     }
     
     renderer.render(scene, camera);
@@ -279,6 +516,21 @@ function onWindowResize() {
 // Set up event listeners
 window.addEventListener('resize', onWindowResize);
 window.addEventListener('scroll', updateModelPosition);
+window.addEventListener('mousemove', onMouseMove);
+window.addEventListener('click', onMouseClick);
+
+// Create initial pulsing effect when the page loads
+setTimeout(function() {
+    if (vrHeadset) {
+        gsap.from(vrHeadset.scale, {
+            x: 0.01,
+            y: 0.01,
+            z: 0.01,
+            duration: 1.5,
+            ease: "elastic.out(1, 0.3)"
+        });
+    }
+}, 500);
 
 // Start animation loop
 animate();
