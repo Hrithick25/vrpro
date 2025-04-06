@@ -888,3 +888,79 @@ button:hover {
     text-align: center;
   }
 }
+/* For devices up to 1080px width */
+@media screen and (max-width: 1080px) {
+  /* Reduce overall container padding */
+  .content-fit {
+    padding: 1.2em;
+  }
+  /* Reduce section vertical padding */
+  .section {
+    padding: 60px 0;
+  }
+  /* Adjust contact table so that text wraps and margins are reduced */
+  #contact table {
+    width: 100%;
+    margin: 1.5em auto;
+    box-sizing: border-box;
+  }
+  #contact td {
+    padding: 0.6em 0.4em;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+/* For devices up to 768px width (small tablets & large mobiles) */
+@media screen and (max-width: 768px) {
+  #vr-model-container {
+    height: 40vh;
+  }
+  .content-fit {
+    padding: 1em;
+  }
+  .section {
+    padding: 50px 0;
+  }
+  #contact table {
+    margin: 1em auto;
+  }
+  #contact td {
+    padding: 0.5em 0.4em;
+  }
+}
+
+/* For devices up to 480px width (mobiles) */
+@media screen and (max-width: 480px) {
+  .content-fit {
+    padding: 0.8em;
+  }
+  .section {
+    padding: 40px 0;
+  }
+  #contact table {
+    margin: 1em auto;
+  }
+  #contact td {
+    padding: 0.4em 0.3em;
+    font-size: 0.85rem;
+  }
+}
+
+/* For extra small devices up to 360px width */
+@media screen and (max-width: 360px) {
+  .content-fit {
+    padding: 0.6em;
+  }
+  .section {
+    padding: 30px 0;
+  }
+  #contact table {
+    width: 95%;
+    margin: 0.8em auto;
+  }
+  #contact td {
+    padding: 0.3em 0.2em;
+    font-size: 0.8rem;
+  }
+}
