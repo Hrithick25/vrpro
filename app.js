@@ -98,7 +98,7 @@ function setupControls() {
     controls.dampingFactor = 0.05;
     controls.enableZoom = false; // Disable zoom to prevent user from getting lost
     controls.enablePan = false;  // Disable panning
-    controls.rotateSpeed = 0.5;  // Make rotation more gentle
+    controls.rotateSpeed = 0.3;  // Make rotation more gentle
     controls.maxPolarAngle = Math.PI * 0.65; // Limit vertical rotation
     controls.minPolarAngle = Math.PI * 0.35;
     
@@ -122,7 +122,7 @@ const mouse = new THREE.Vector2();
 
 // Try to load the model
 loader.load(
-    './models/mr_headset_concept.glb', 
+    './models/glass.glb', 
     function(gltf) {
         vrHeadset = gltf.scene;
         
@@ -297,21 +297,14 @@ function onMouseMove(event) {
 // Handle mouse click on model
 function onMouseClick(event) {
     if (vrHeadset && isHovering) {
-        // Trigger a special animation on click
-        
-        // First stop any ongoing animations
         pauseAnimations();
         
-        // Get current section
         const currentSectionId = getCurrentSectionId();
-        
-        // Do a 360 spin based on the current section
         const currentPosition = sectionPositions.find(pos => pos.id === currentSectionId);
         
-        // Create a spectacular spin animation
-        const spinDuration = 1.2;
+        // Increase spin duration for slower rotation
+        const spinDuration = 2.0; // Increased from 1.2
         
-        // First part - spin up and zoom
         gsap.timeline()
             .to(vrHeadset.rotation, {
                 y: vrHeadset.rotation.y + Math.PI * 2,
@@ -324,23 +317,21 @@ function onMouseClick(event) {
                 yoyo: true,
                 repeat: 1,
                 ease: "power1.out"
-            }, 0) // Start at the same time
+            }, 0)
             .to(spotLight, {
                 intensity: 1.5,
                 duration: spinDuration / 4,
                 yoyo: true,
                 repeat: 3,
                 ease: "sine.inOut"
-            }, 0) // Start at the same time
+            }, 0)
             .call(function() {
-                // Resume regular animations when done
                 if (!isUserInteracting) {
                     resumeAnimations();
                 }
             });
     }
 }
-
 // Show tooltip
 // function showTooltip(text) {
 //     let tooltip = document.getElementById('vr-model-tooltip');

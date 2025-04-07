@@ -3,14 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>VR-verse</title>
+    <title>VR-Verse</title>
     <link rel="icon" type="image/x-icon" href="logo(v).png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@<version>/examples/jsm/"
+        }
+      }
+      </script>
   </head>
 <body>
   <!-- HEADER / NAVBAR -->
-<!-- HEADER / NAVBAR -->
 <header>
   <div class="content-fit">
     <div class="logo">Viruzverse</div>
@@ -48,10 +55,8 @@
   <div class="section" id="home" style="background-image: url('img/3d-background.jpg'); background-size: cover; background-position: center;">
     <div class="content-fit">
       <h1 class="title">Visualize before you build!</h1>
-      <p class="quote">Step into a new dimension of architectural visualization—see, feel, and experience your dream space before construction begins.</p>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque accusantium pariatur facilis ipsa nemo ducimus itaque deleniti possimus eaque eos soluta deserunt minima, sapiente, laudantium quidem beatae assumenda quas sunt. Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque accusantium pariatur facilis ipsa nemo ducimus itaque deleniti possimus eaque eos soluta deserunt minima, sapiente, laudantium quidem beatae assumenda quas sunt. 
-        
-    </p>
+      <p class="quote">Step into Your Future Home with Confidence</p>
+      <p>At Viruzverse Solutions, we revolutionize the way you design and experience spaces using immersive Virtual Reality. Walk through your dream home before it's built — explore floor plans, interiors, lighting, and finishes in stunning detail. Whether you're a homeowner, architect, or designer, our platform empowers you to make smart decisions, avoid expensive mistakes, and bring your vision to life with clarity. Don't just imagine it — experience it.</p>
       <center>
         <button onclick="openDemoForm()" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
           Register for Demo
@@ -66,16 +71,16 @@
       <h2 class="title">Explore Our Designs</h2>
       <div class="design-category">
         <div>
-          <h3>Interior Design</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et justo et purus facilisis convallis.</p>
+          <h3><i class="fas fa-couch"></i> Interior Design</h3>
+          <p>Bring your spaces to life with immersive interior design experiences. From furniture placement to lighting and color schemes, visualize every element and make confident design choices before implementation.</p>
         </div>
         <div>
-          <h3>Exterior Design</h3>
-          <p>Curabitur ut felis nec libero posuere gravida. Vestibulum sed lacus id magna facilisis auctor.</p>
+          <h3><i class="fas fa-home"></i> Exterior Design</h3>
+          <p>Experience the exterior of your dream home like never before. Walk around your virtual facade, explore architectural styles, textures, and landscaping — all tailored to your vision.</p>
         </div>
         <div>
-          <h3>Home & Kitchen Design</h3>
-          <p>Proin aliquet, nulla in commodo tristique, velit odio ultricies libero, ut feugiat lectus ligula non arcu.</p>
+          <h3><i class="fas fa-utensils"></i> Home & Kitchen Design</h3>
+          <p>Redefine functionality and aesthetics with smart home and kitchen layouts. Experiment with modern fittings, space planning, and design elements in real-time, ensuring a perfect blend of style and practicality.</p>
         </div>
       </div>
     </div>
@@ -86,15 +91,15 @@
     <div class="content-fit">
       <h2 class="title">About Us</h2>
       <p>
-        At Viruzverse, we redefine architectural visualization using cutting-edge 3D AR/VR technology. Our goal is to help builders, architects, and homeowners experience their projects in real time, immersive detail before construction begins.
+        At Viruzverse, we use advanced AR/VR technology to bring building designs to life. Our goal is to help architects, builders, and homeowners see their projects in 3D before construction begins. We make design easier and more visual by providing realistic virtual walkthroughs, easy customization, and smooth coordination with actual building plans.
       </p>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vehicula nibh at arcu suscipit, vel sollicitudin nulla viverra. Donec dignissim dui elit, in facilisis nisl ultrices a.
+        What We Offer:
       </p>
       <ul>
-        <li>Next-Gen AR/VR Modeling</li>
-        <li>Customizable Virtual Walkthroughs</li>
-        <li>Seamless Integration with Construction Plans</li>
+        <li><i class="fas fa-magic"></i> AR/VR Modeling - View your designs in a detailed 3D environment.</li>
+        <li><i class="fas fa-door-open"></i> Virtual Walkthroughs - Walk through and adjust your project before it's built.</li>
+        <li><i class="fas fa-hard-hat"></i> Easy Plan Integration - Match your virtual design with real-world construction plans.</li>
       </ul>
     </div>
   </div>
@@ -106,28 +111,6 @@
       
       <div class="testimonial-container">
         <div class="testimonial-slider">
-          <div class="testimonial-slide">
-            <div class="testimonial-card">
-              <div class="user-profile">
-                <div class="profile-image">
-                  <img src="user.png" alt="Aditya" />
-                </div>
-                <div class="profile-info">
-                  <h4>Aditya</h4>
-                  <p class="profile-position">Architect & Designer</p>
-                </div>
-              </div>
-              <div class="testimonial-rating">
-                <span class="star">★</span>
-                <span class="star">★</span>
-                <span class="star">★</span>
-                <span class="star">★</span>
-                <span class="star">★</span>
-              </div>
-              <p class="testimonial-text">"Viruzverse transformed the way we visualize our projects. The immersive experience is unparalleled and helped our clients understand spatial relationships better than any 2D drawing could."</p>
-            </div>
-          </div>
-          
           <div class="testimonial-slide">
             <div class="testimonial-card">
               <div class="user-profile">
@@ -144,7 +127,7 @@
                 <span class="star">★</span>
                 <span class="star">★</span>
                 <span class="star">★</span>
-                <span class="star half">★</span>
+                <span class="star">★</span>
               </div>
               <p class="testimonial-text">"Thanks to Viruzverse, I could see my dream home before it was built. The VR walkthrough helped me make crucial design decisions and saved me from costly modifications during construction!"</p>
             </div>
@@ -154,11 +137,33 @@
             <div class="testimonial-card">
               <div class="user-profile">
                 <div class="profile-image">
-                  <img src="user.png" alt="Praveen" />
+                  <img src="user.png" alt="Ananya" />
                 </div>
                 <div class="profile-info">
-                  <h4>Mohan</h4>
-                  <p class="profile-position">Interior Specialist</p>
+                  <h4>Ananya</h4>
+                  <p class="profile-position">Interior Designer</p>
+                </div>
+              </div>
+              <div class="testimonial-rating">
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star half">★</span>
+              </div>
+              <p class="testimonial-text">"Viruzverse made it easy to showcase my ideas to clients in a 3D space. They loved being able to walk through the design before finalizing anything!"</p>
+            </div>
+          </div>
+          
+          <div class="testimonial-slide">
+            <div class="testimonial-card">
+              <div class="user-profile">
+                <div class="profile-image">
+                  <img src="user.png" alt="Rahul" />
+                </div>
+                <div class="profile-info">
+                  <h4>Rahul</h4>
+                  <p class="profile-position">Construction Manager</p>
                 </div>
               </div>
               <div class="testimonial-rating">
@@ -168,7 +173,7 @@
                 <span class="star">★</span>
                 <span class="star">★</span>
               </div>
-              <p class="testimonial-text">"The VR walkthrough experience helped us identify design flaws before construction. Their attention to detail is impressive - even the lighting and shadows are accurately rendered, giving clients a true feel of the space."</p>
+              <p class="testimonial-text">"The ability to match virtual models with our construction plans made our workflow faster and more accurate. Viruzverse is a game changer for project planning!"</p>
             </div>
           </div>
         </div>
@@ -189,12 +194,12 @@
   <!-- CONTACT SECTION -->
   <div class="section" id="contact">
     <div class="content-fit">
-      <h2 class="title">Contact Us</h2>
+      <h2 class="title"><i class="fas fa-phone-alt"></i> Contact Us</h2>
       <table>
-        <tr><td>Email</td><td>contact.viruzverse@proton.me</td></tr>
-        <tr><td>Phone</td><td>+91 74186 76100</td></tr>
-        <tr><td>Website</td><td>www.viruzverse.tech</td></tr>
-        <tr><td>Address</td><td>Coimbatore, Tamil Nadu</td></tr>
+        <tr><td><i class="fas fa-envelope"></i> Email</td><td>contact@viruzverse.tech</td></tr>
+        <tr><td><i class="fas fa-phone"></i> Phone</td><td>+91 965900 8000</td></tr>
+        <tr><td><i class="fas fa-globe"></i> Website</td><td>www.viruzverse.tech</td></tr>
+        <tr><td><i class="fas fa-map-marker-alt"></i> Address</td><td>Coimbatore, Tamil Nadu</td></tr>
       </table>
     </div>
   </div>
@@ -239,7 +244,7 @@
           <a href="https://www.linkedin.com/company/viruzverse-solutions/posts/?feedView=all" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
         </div>
       </div>
-    </div>
+    </div>a
     <div class="footer-bottom">
       &copy; 2025 Viruzverse. All Rights Reserved.
     </div>

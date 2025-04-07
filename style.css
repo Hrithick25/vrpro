@@ -137,7 +137,7 @@ nav ul li a:hover {
   font-size: 3rem; 
   margin-bottom: 1em; 
   text-align: center; 
-  color: #d0d9b7;
+  color: #d9b7b9;
   text-shadow: 0 0 15px rgba(149, 0, 255, 0.3);
   position: relative;
 }
@@ -565,6 +565,8 @@ button:hover {
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   padding-top: 0.5em;
 }
+
+
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
